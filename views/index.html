@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Citas BodrioIMSS</title>
+        <link rel="stylesheet" href="/css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;1,400;1,700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+
+        <h1>Citas de BodrioIMSS</h1>
+
+        <!-- Table for displaying records -->
+        <div id="table-container">
+            <button id="add-appointment-btn">Agregar cita</button>
+            <table id="appointment-table">
+                <thead>
+                <tr>
+                    <th>ID de Cita</th>
+                    <th>ID de Sala</th>
+                    <th>Matricula del Empleado</th>
+                    <th>ID del Expediente</th>
+                    <th>Fecha y Hora</th>
+                    <th>Nivel de Urgencia</th>
+                    <th>Tipo de Cita</th>
+                    <th>ID de Servicio</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Records will be inserted here using JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal for adding/updating an appointment -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2 id="modal-title">Agregar cita</h2>
+                <form id="appointment-form">
+                    <label id="label_cita_id" for="cita_id">ID de la cita:
+                        <input type="hidden" name="cita_id" id="cita_id">
+                    </label>
+                    <label for="sala_id">Sala:
+                        <input type="text" name="sala_id" id="sala_id">
+                    </label>
+                    <label for="empleado_matricula">Matricula del empleado:
+                        <input type="text" name="empleado_matricula" id="empleado_matricula">
+                    </label>
+                    <label for="registro_expediente_id">Expediente:
+                        <input type="text" name="registro_expediente_id" id="registro_expediente_id">
+                    </label>
+                    <label for="fecha_hora">Fecha y hora:
+                        <input type="datetime-local" name="fecha_hora" id="fecha_hora">
+                    </label>
+                    <label for="nivel_urgencia">Nivel de Urgencia:
+                        <input type="text" name="nivel_urgencia" id="nivel_urgencia">
+                    </label>
+                    <label for="tipo_cita">Tipo de cita
+                        <input type="text" name="tipo_cita" id="tipo_cita">
+                    </label>
+                    <label for="servicio_id">Tipo de Servicio:
+                        <input type="text" name="servicio_id" id="servicio_id">
+                    </label>
+                    <button type="submit" id="save-appointment-btn">Agregar cita &check;</button>
+                </form>
+            </div>
+        </div>
+
+        <script src="/js/script.js"></script>
+    </body>
+</html>
