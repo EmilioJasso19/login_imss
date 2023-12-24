@@ -118,10 +118,16 @@ app.get('/get-appointments', checkAuthentication, (req, res) => {
 
 // endpoint para agregar citas -- duda
 app.post('/add-appointment', (req, res) => {
-  const { sala_id, empleado_matricula, registro_expediente_id, fecha_hora, nivel_urgencia, tipo_cita, servicio_id } = req.body;
+  const { sala_id, empleado_matricula, fecha_hora, nivel_urgencia, tipo_cita, servicio_id } = req.body;
   pool.getConnection((err, conn) => {
     if (err) throw err;
-    conn.query('CALL sp_AgregarCita(?,?,?,?,?,?,?)', [sala_id, empleado_matricula, registro_expediente_id, fecha_hora, nivel_urgencia, tipo_cita, servicio_id], (error, results) => {
+    conn.query('CALL sp_AgregarCita(?,?,?,?,?,?)', [
+      sala_id,
+      empleado_matricula, 
+      fecha_hora, 
+      nivel_urgencia, 
+      tipo_cita, 
+      servicio_id], (error, results) => {
       conn.release();
       if (error) {
         return res.status(500).send({ message: 'Error al agregar cita', error: error });
@@ -137,10 +143,11 @@ app.put('/update-appointment/:id', (req, res) => {
     pool.getConnection((err, connection) => {
         if(err) throw err;
         
+        const cita_id = req.params.id;
         const params = req.body;
 
         connection.query('CALL sp_ActualizarCita(?,?,?,?)', [
-            params.id,
+            cita_id,
             params.sala_id, 
             params.empleado_matricula, 
             params.fecha_hora

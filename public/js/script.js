@@ -36,14 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('appointment-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const citaId = document.getElementById('cita_id').value; // Obtén el ID de la cita
-    const isEditing = citaId !== ''; // Estás editando si citaId no está vacío
+    const citaId = document.getElementById('cita_id').value; // Obten el ID de la cita
+    const isEditing = citaId !== ''; // Estas editando si citaId no esta vacio
   
-    // Configura la URL y el método dependiendo de si estás agregando o editando
+    // Cambiar URL si esta editando o agregando
     const url = isEditing ? `http://localhost:3000/update-appointment/${citaId}` : 'http://localhost:3000/add-appointment';
     const method = isEditing ? 'PUT' : 'POST';
 
-    // Gather form data
     const formData = {
     sala_id: document.getElementById('sala_id').value,
     empleado_matricula: document.getElementById('empleado_matricula').value,
@@ -53,8 +52,7 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     servicio_id: document.getElementById('servicio_id').value
     };
 
-
-    // Send the data using fetch
+    // Enviar informacion
     fetch(url, {
         method: method,
         headers: {
@@ -82,21 +80,29 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     });
 });
 
-// Format the time for the input html
+// Formato para que fecha_hora coinicida con el de datetime-local
 function formatDateTimeForInput(dateTimeString) {
     const date = new Date(dateTimeString);
     return date.toISOString().slice(0, 16);
 }
   
 function deleteAppointment(appointmentId) {
-  if (confirm('Are you sure you want to delete this appointment?')) {
+  if (confirm('Estas seguro de eliminar esta cita?')) {
     fetch(`http://localhost:3000/delete-appointment/${appointmentId}`, {
       method: 'DELETE',
     })
-    .then(response => response.json())
+    .then(response => {
+      // Comprobar si la respuesta del servidor es exitosa
+      if (!response.ok) {
+        throw new Error('Error en la respuesta del servidor');
+      }
+      return response.json();
+    })
     .then(data => {
-        console.log('Delete successful', data);
-      // Remove the appointment row from the table or reload appointments
+      if (data.status !== 'success') {
+        throw new Error(data.message);
+      }
+      console.log('Eliminación exitosa!', data);
       loadAppointments();
     })
     .catch((error) => {
@@ -105,36 +111,35 @@ function deleteAppointment(appointmentId) {
   }
 }
 
+
 function editAppointment(appointmentId) {
-    // Mostrar el modal
-    openModal();
-    // Obtén los datos de la cita desde el frontend o haz una solicitud al backend.
-    // Por simplicidad, supondremos que obtienes los datos de la tabla.
+  // Mostrar el modal
+  openModal();
+  // Obtén los datos de la cita desde el frontend o haz una solicitud al backend.
+  // Por simplicidad, supondremos que obtienes los datos de la tabla.
+  const row = document.querySelector(`tr[data-cita-id="${appointmentId}"]`);
+  if (row) {
+    document.getElementById('modal-title').textContent = 'Editar Cita';
+    document.getElementById('cita_id').value = appointmentId;
+    document.getElementById('sala_id').value = row.cells[1].textContent;
+    document.getElementById('empleado_matricula').value = row.cells[2].textContent;
+    document.getElementById('fecha_hora').value = formatDateTimeForInput(row.cells[3].textContent);
+    document.getElementById('nivel_urgencia').value = row.cells[4].textContent;
+    document.getElementById('tipo_cita').value = row.cells[5].textContent;
+    document.getElementById('servicio_id').value = row.cells[6].textContent;
     
-    const row = document.querySelector(`tr[data-cita-id="${appointmentId}"]`);
-    console.log('row -> ', row)
-    if (row) {
-        document.getElementById('modal-title').textContent = 'Editar Cita';
-        document.getElementById('cita_id').value = appointmentId;
-        document.getElementById('sala_id').value = row.cells[1].textContent;
-        document.getElementById('empleado_matricula').value = row.cells[2].textContent;
-        document.getElementById('fecha_hora').value = formatDateTimeForInput(row.cells[4].textContent);
-        document.getElementById('nivel_urgencia').value = row.cells[5].textContent;
-        document.getElementById('tipo_cita').value = row.cells[6].textContent;
-        document.getElementById('servicio_id').value = row.cells[7].textContent;
+    // Deshabilitar campos que no se pueden editar
+    document.getElementById('cita_id').disabled = true;
+    document.getElementById('nivel_urgencia').disabled = true;
+    document.getElementById('tipo_cita').disabled = true;
+    document.getElementById('servicio_id').disabled = true;
         
-        // Deshabilitar campos que no se pueden editar
-        document.getElementById('cita_id').disabled = true;
-        document.getElementById('nivel_urgencia').disabled = true;
-        document.getElementById('tipo_cita').disabled = true;
-        document.getElementById('servicio_id').disabled = true;
-        
-        // Mostrar input cita
-        document.getElementById('label_cita_id').style.display = 'block';
-        document.getElementById('cita_id').type = 'text';
-        // Cambiar el texto del botón de envío
-        document.getElementById('save-appointment-btn').textContent = 'Guardar Cambios';
-    }
+    // Mostrar input cita
+    document.getElementById('label_cita_id').style.display = 'block';
+    document.getElementById('cita_id').type = 'text';
+    // Cambiar el texto del botón de envío
+    document.getElementById('save-appointment-btn').textContent = 'Guardar Cambios';
+  }
 }
 
 function loadAppointments() {
@@ -163,7 +168,7 @@ function loadAppointments() {
     });
   })
   .catch(error => {
-    console.error('Error loading appointments:', error);
+    console.error('Error al cargar las citas:', error);
   });
 }
 
@@ -201,7 +206,7 @@ function updateTable() {
 function addTableRow(appointment) {
   const tableBody = document.getElementById('appointment-table').querySelector('tbody');
   const row = document.createElement('tr');
-  row.setAttribute('data-cita-id', appointment.cita_id); // Setting the unique identifier
+  row.setAttribute('data-cita-id', appointment.cita_id);
 
   row.innerHTML = `
     <td>${appointment.cita_id}</td>
