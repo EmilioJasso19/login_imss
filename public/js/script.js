@@ -47,11 +47,10 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     const formData = {
     sala_id: document.getElementById('sala_id').value,
     empleado_matricula: document.getElementById('empleado_matricula').value,
-    registro_expediente_id: document.getElementById('registro_expediente_id').value, // Actualizado para coincidir con el HTML
     fecha_hora: document.getElementById('fecha_hora').value,
     nivel_urgencia: document.getElementById('nivel_urgencia').value,
     tipo_cita: document.getElementById('tipo_cita').value,
-    servicio_id: document.getElementById('servicio_id').value // Actualizado para coincidir con el HTML
+    servicio_id: document.getElementById('servicio_id').value
     };
 
 
@@ -66,12 +65,8 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        // Here you can update the frontend to show the new appointment
-        // Close the modal
         closeModal();
-        // Reset the form
         document.getElementById('appointment-form').reset();
-        document.getElementById('registro_expediente_id').disabled = false;
         document.getElementById('nivel_urgencia').disabled = false;
         document.getElementById('tipo_cita').disabled = false;
         document.getElementById('servicio_id').disabled = false;
@@ -79,7 +74,7 @@ document.getElementById('appointment-form').addEventListener('submit', function(
         document.getElementById('modal-title').textContent = 'Agregar cita';
         document.getElementById('cita_id').value = '';
         document.getElementById('label_cita_id').style.display = 'none';
-        // Reload or update your appointments table
+        // Cargar/Recargar las citas
         loadAppointments();
     })
     .catch((error) => {
@@ -124,15 +119,12 @@ function editAppointment(appointmentId) {
         document.getElementById('sala_id').value = row.cells[1].textContent;
         document.getElementById('empleado_matricula').value = row.cells[2].textContent;
         document.getElementById('fecha_hora').value = formatDateTimeForInput(row.cells[4].textContent);
-        // Los siguientes campos estarán deshabilitados
-        document.getElementById('registro_expediente_id').value = row.cells[3].textContent;
         document.getElementById('nivel_urgencia').value = row.cells[5].textContent;
         document.getElementById('tipo_cita').value = row.cells[6].textContent;
         document.getElementById('servicio_id').value = row.cells[7].textContent;
         
         // Deshabilitar campos que no se pueden editar
-        document.getElementById('cita_id').disabled = true
-        document.getElementById('registro_expediente_id').disabled = true;
+        document.getElementById('cita_id').disabled = true;
         document.getElementById('nivel_urgencia').disabled = true;
         document.getElementById('tipo_cita').disabled = true;
         document.getElementById('servicio_id').disabled = true;
@@ -150,15 +142,14 @@ function loadAppointments() {
     .then(response => response.json())
     .then(appointments => {
     const tableBody = document.getElementById('appointment-table').querySelector('tbody');
-    tableBody.innerHTML = ''; // Clear current table body
-    // Populate table with new data
+    tableBody.innerHTML = ''; // Limpiar el cuerpo de la tabla
+    // Mostrar nueva informacion
     appointments.forEach(appointment => {
       tableBody.innerHTML += `
         <tr data-cita-id="${appointment.cita_id}">
           <td>${appointment.cita_id}</td>
           <td>${appointment.sala_id}</td>
           <td>${appointment.empleado_matricula}</td>
-          <td>${appointment.registro_expediente_id}</td>
           <td>${appointment.fecha_hora}</td>
           <td>${appointment.nivel_urgencia}</td>
           <td>${appointment.tipo_cita}</td>
@@ -181,7 +172,7 @@ function updateTable() {
     .then(response => response.json())
     .then(appointments => {
       const tableBody = document.getElementById('appointment-table').querySelector('tbody');
-      tableBody.innerHTML = ''; // Clear current table body
+      tableBody.innerHTML = ''; // Limpiar tabla
 
       appointments.forEach(appointment => {
         const row = `
@@ -189,7 +180,6 @@ function updateTable() {
             <td>${appointment.cita_id}</td>
             <td>${appointment.sala_id}</td>
             <td>${appointment.empleado_matricula}</td>
-            <td>${appointment.registro_expediente_id}</td>
             <td>${appointment.fecha_hora}</td>
             <td>${appointment.nivel_urgencia}</td>
             <td>${appointment.tipo_cita}</td>
@@ -217,7 +207,6 @@ function addTableRow(appointment) {
     <td>${appointment.cita_id}</td>
     <td>${appointment.sala_id}</td>
     <td>${appointment.empleado_matricula}</td>
-    <td>${appointment.registro_expediente_id}</td>
     <td>${appointment.fecha_hora}</td>
     <td>${appointment.nivel_urgencia}</td>
     <td>${appointment.tipo_cita}</td>
@@ -238,7 +227,6 @@ function updateTableRow(appointment) {
       <td>${appointment.cita_id}</td>
       <td>${appointment.sala_id}</td>
       <td>${appointment.empleado_matricula}</td>
-      <td>${appointment.registro_expediente_id}</td>
       <td>${appointment.fecha_hora}</td>
       <td>${appointment.nivel_urgencia}</td>
       <td>${appointment.tipo_cita}</td>
@@ -254,6 +242,6 @@ function updateTableRow(appointment) {
 function deleteTableRow(citaId) {
     const row = document.querySelector(`tr[data-cita-id="${citaId}"]`);
     if (row) {
-        row.remove(); // This will remove the row from the table
+        row.remove();
     }
 }

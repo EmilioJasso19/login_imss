@@ -22,7 +22,6 @@
                     <th>ID de Cita</th>
                     <th>ID de Sala</th>
                     <th>Matricula del Empleado</th>
-                    <th>ID del Expediente</th>
                     <th>Fecha y Hora</th>
                     <th>Nivel de Urgencia</th>
                     <th>Tipo de Cita</th>
@@ -31,12 +30,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Records will be inserted here using JavaScript -->
+                <!-- Registros de la BD -->
                 </tbody>
             </table>
         </div>
 
-        <!-- Modal for adding/updating an appointment -->
+        <!-- Modal para agregar/modificar citas -->
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
@@ -50,9 +49,6 @@
                     </label>
                     <label for="empleado_matricula">Matricula del empleado:
                         <input type="text" name="empleado_matricula" id="empleado_matricula">
-                    </label>
-                    <label for="registro_expediente_id">Expediente:
-                        <input type="text" name="registro_expediente_id" id="registro_expediente_id">
                     </label>
                     <label for="fecha_hora">Fecha y hora:
                         <input type="datetime-local" name="fecha_hora" id="fecha_hora">
