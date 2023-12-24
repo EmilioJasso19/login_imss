@@ -40,7 +40,7 @@ document.getElementById('appointment-form').addEventListener('submit', function(
     const isEditing = citaId !== ''; // Estas editando si citaId no esta vacio
   
     // Cambiar URL si esta editando o agregando
-    const url = isEditing ? `http://localhost:3000/update-appointment/${citaId}` : 'http://localhost:3000/add-appointment';
+    const url = isEditing ? `/update-appointment/${citaId}` : '/add-appointment';
     const method = isEditing ? 'PUT' : 'POST';
 
     const formData = {
@@ -88,7 +88,7 @@ function formatDateTimeForInput(dateTimeString) {
   
 function deleteAppointment(appointmentId) {
   if (confirm('Estas seguro de eliminar esta cita?')) {
-    fetch(`http://localhost:3000/delete-appointment/${appointmentId}`, {
+    fetch(`/delete-appointment/${appointmentId}`, {
       method: 'DELETE',
     })
     .then(response => {
@@ -143,7 +143,7 @@ function editAppointment(appointmentId) {
 }
 
 function loadAppointments() {
-    fetch('http://localhost:3000/get-appointments')
+    fetch('/get-appointments')
     .then(response => response.json())
     .then(appointments => {
     const tableBody = document.getElementById('appointment-table').querySelector('tbody');
@@ -173,7 +173,7 @@ function loadAppointments() {
 }
 
 function updateTable() {
-  fetch('http://localhost:3000/get-appointments')
+  fetch('/get-appointments')
     .then(response => response.json())
     .then(appointments => {
       const tableBody = document.getElementById('appointment-table').querySelector('tbody');
