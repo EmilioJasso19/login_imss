@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #055c1b;
-    --second-color: #26aa43;
+    --primary-color: #0c231e;
+    --second-color: #13322b;
 }
 
 body {
@@ -14,10 +14,12 @@ body {
     color: #fff;
 }
 
+/* Form */
 form {
     padding: 2.5rem;
     background-color: var(--second-color);
-    width: 80%;
+    width: 60%;
+    min-width: 35rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,6 +49,6 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     cursor: pointer;
-    opacity: .75;
+    opacity: 0.6;
     transform: scale(1.1);
 }
