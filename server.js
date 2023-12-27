@@ -4,8 +4,6 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const session = require('express-session');
 const crypto = require('crypto');
-const compression = require('compression');
-app.use(compression());
 
 // crear instancia Express
 const app = express();
