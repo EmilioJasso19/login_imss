@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 var modal = document.getElementById("modal");
 var btn = document.getElementById("add-appointment-btn");
 var closeBtn = document.getElementsByClassName("close-btn")[0];
@@ -149,15 +151,11 @@ function editAppointment(appointmentId) {
 function loadAppointments(page, limit) {
   fetch(`/get-appointments?page=${page}&limit=${limit}`)
   .then(response => response.json())
-  .then(data => {
-      if (!data.data) {
-        console.error('data.data no está definido, revisa la estructura del objeto:', data);
-        return; // Salimos de la función ya que no podemos proceder sin los datos correctos.
-      }
-      const appointments = data.data;
-      console.log('lo que deberia ser appointments', data.data)
-      const totalPages = data.totalPages;
-      const totalAppointments = data.totalRecords;
+  .then(response => {
+      const appointments = response.data;
+      console.log('lo que deberia ser appointments', response.data)
+      const totalPages = response.totalPages;
+      const totalAppointments = response.totalRecords;
 
       const tableBody = document.getElementById('appointment-table').querySelector('tbody');
       tableBody.innerHTML = '';
