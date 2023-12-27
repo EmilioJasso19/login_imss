@@ -117,23 +117,38 @@ app.get('/get-appointments', checkAuthentication, (req, res) => {
 
 
 // endpoint para agregar citas -- duda
-app.post('/add-appointment', (req, res) => {
-  const { sala_id, empleado_matricula, fecha_hora, nivel_urgencia, tipo_cita, servicio_id } = req.body;
+app.get('/get-appointments', checkAuthentication, (req, res) => {
+  const page = parseInt(req.query.page) || 1; // valor por defecto es 1
+  const limit = parseInt(req.query.limit) || 10; // valor por defecto es 10
+  const offset = (page - 1) * limit;
+
   pool.getConnection((err, conn) => {
-    if (err) throw err;
-    conn.query('CALL sp_AgregarCita(?,?,?,?,?,?)', [
-      sala_id,
-      empleado_matricula, 
-      fecha_hora, 
-      nivel_urgencia, 
-      tipo_cita, 
-      servicio_id], (error, results) => {
-      conn.release();
-      if (error) {
-        return res.status(500).send({ message: 'Error al agregar cita', error: error });
-      }
-      res.send({ status: 'success', message: 'Cita agregada correctamente' });
-    });
+      if (err) throw err;
+
+      // Primero, obtener el total de registros
+      conn.query('SELECT COUNT(*) AS count FROM cita', (error, countResult) => {
+          if (error) {
+              conn.release();
+              return res.status(500).send({ message: 'Error al contar citas', error: error });
+          }
+          const totalRecords = countResult[0].count;
+          const totalPages = Math.ceil(totalRecords / limit);
+
+          // Ahora, obtener las citas con limit y offset
+          conn.query('SELECT * FROM cita LIMIT 10 OFFSET ?', [limit, offset], (error, results) => {
+              conn.release();
+              if (error) {
+                  return res.status(500).send({ message: 'Error al obtener citas', error: error });
+              }
+              // Enviar los resultados junto con los metadatos de la paginacion
+              res.send({
+                  data: results,
+                  page: page,
+                  totalPages: totalPages,
+                  totalRecords: totalRecords
+              });
+          });
+      });
   });
 });
 
