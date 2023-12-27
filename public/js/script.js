@@ -1,3 +1,6 @@
+document.addEventListener('DOMContentLoaded', function() {
+  loadAppointments(1, 15);
+});
 var modal = document.getElementById("modal");
 var btn = document.getElementById("add-appointment-btn");
 var closeBtn = document.getElementsByClassName("close-btn")[0];
@@ -36,9 +39,6 @@ function changePage(delta) {
   document.getElementById('current-page').textContent = `Página: ${currentPage}`;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  loadAppointments(1, 15);
-});
 
 document.getElementById('appointment-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -176,13 +176,13 @@ function loadAppointments(page, limit) {
           `;
       });
 
-      // Mostrar numero total de paginas
+      // Mostrar numero total de citas y paginas
       document.getElementById('total-appointments').textContent = `Total de citas: ${totalAppointments}`
       document.getElementById('total-pages').textContent = `Total de paginas: ${totalPages}`
 
       // Actualizar estado de los botones de paginacion
-      document.getElementById('prev-page-btn').disabled = currentPage <= 1;
-      document.getElementById('next-page-btn').disabled = currentPage >= totalPages;
+      if (currentPage <= 1) document.getElementById('prev-page-btn').disabled
+      if (currentPage >= totalPages) document.getElementById('next-page-btn').disabled
   })
   .catch(error => {
       console.error('Error al cargar las citas:', error);
