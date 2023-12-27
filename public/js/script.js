@@ -1,6 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-  loadAppointments(1, 15);
-});
 var modal = document.getElementById("modal");
 var btn = document.getElementById("add-appointment-btn");
 var closeBtn = document.getElementsByClassName("close-btn")[0];
@@ -27,6 +24,10 @@ function outsideClick(e){
   }
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+  loadAppointments(1, 15);
+});
+
 let currentPage = 1;
 const limit = 15;
 
@@ -38,7 +39,6 @@ function changePage(delta) {
   // Actualizar el contenido del elemento #current-page
   document.getElementById('current-page').textContent = `Página: ${currentPage}`;
 }
-
 
 document.getElementById('appointment-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -150,7 +150,9 @@ function loadAppointments(page, limit) {
   fetch(`/get-appointments?page=${page}&limit=${limit}`)
   .then(response => response.json())
   .then(data => {
+    console.log('esto es data', data)
       const appointments = data.data;
+      console.log('lo que deberia ser appointments', data.data)
       const totalPages = data.totalPages;
       const totalAppointments = data.totalRecords;
 
