@@ -150,7 +150,10 @@ function loadAppointments(page, limit) {
   fetch(`/get-appointments?page=${page}&limit=${limit}`)
   .then(response => response.json())
   .then(data => {
-    console.log('esto es data', data)
+      if (!data.data) {
+        console.error('data.data no está definido, revisa la estructura del objeto:', data);
+        return; // Salimos de la función ya que no podemos proceder sin los datos correctos.
+      }
       const appointments = data.data;
       console.log('lo que deberia ser appointments', data.data)
       const totalPages = data.totalPages;
