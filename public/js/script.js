@@ -1,4 +1,4 @@
-const { response } = require("express");
+import { response } from "express";
 
 var modal = document.getElementById("modal");
 var btn = document.getElementById("add-appointment-btn");
@@ -151,11 +151,12 @@ function editAppointment(appointmentId) {
 function loadAppointments(page, limit) {
   fetch(`/get-appointments?page=${page}&limit=${limit}`)
   .then(response => response.json())
-  .then(response => {
-      const appointments = response.data;
-      console.log('lo que deberia ser appointments', response.data)
-      const totalPages = response.totalPages;
-      const totalAppointments = response.totalRecords;
+  .then(data => {
+    console.log(response.json());
+      const appointments = data;
+      console.log('lo que deberia ser appointments', data.data)
+      const totalPages = data.totalPages;
+      const totalAppointments = data.totalRecords;
 
       const tableBody = document.getElementById('appointment-table').querySelector('tbody');
       tableBody.innerHTML = '';
