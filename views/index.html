@@ -16,6 +16,8 @@
         <!-- Table for displaying records -->
         <div id="table-container">
             <button id="add-appointment-btn">Agregar cita</button>
+            <p id="total-appointments"></p>
+            <p id="total-pages"></p>
             <table id="appointment-table">
                 <thead>
                 <tr>
@@ -32,7 +34,14 @@
                 <tbody>
                 <!-- Registros de la BD -->
                 </tbody>
+
             </table>
+            <!-- Controles para la paginacion -->
+            <div id="pagination-controls">
+                <button onclick="changePage(-1)" id="prev-page-btn">Anterior</button>
+                <span id="current-page">1</span>
+                <button onclick="changePage(1)" id="next-page-btn">Siguiente</button>
+            </div>
         </div>
 
         <!-- Modal para agregar/modificar citas -->

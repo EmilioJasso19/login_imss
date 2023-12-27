@@ -116,6 +116,15 @@ button[type="submit"] {
     box-shadow: 0px 2px 2px 1px #4CAF5099;
 }
 
+/* Control de paginacion */
+#prev-page-btn, #next-page-btn {
+    margin: 16px 0;
+}
+
+#current-page {
+    margin: 16px 8px;
+}
+
 /* Ocultar input de cita_id */
 #label_cita_id {
     display: none;

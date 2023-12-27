@@ -1,36 +1,43 @@
-// Get modal element
 var modal = document.getElementById("modal");
-// Get open modal button
 var btn = document.getElementById("add-appointment-btn");
-// Get close button
 var closeBtn = document.getElementsByClassName("close-btn")[0];
 
-// Listen for open click
+// Abrir el modal
 btn.addEventListener("click", openModal);
-// Listen for close click
+// Abrir el modal
 closeBtn.addEventListener("click", closeModal);
-// Listen for outside click
+// Cerrar el modal si se presiona fuera de el
 window.addEventListener("click", outsideClick);
 
-// Function to open modal
 function openModal(){
   modal.style.display = "block";
 }
 
-// Function to close modal
 function closeModal(){
   modal.style.display = "none";
 }
 
-// Function to close modal if outside click
+// Funcion para cerrar el modal presionando cualquier otra parte
 function outsideClick(e){
   if(e.target == modal){
     modal.style.display = "none";
   }
 }
 
+let currentPage = 1;
+const limit = 15;
+
+function changePage(delta) {
+  if (currentPage >= 1) delta === 1 ? currentPage++ : currentPage--;
+  else currentPage = 1
+  loadAppointments(currentPage, limit);
+
+  // Actualizar el contenido del elemento #current-page
+  document.getElementById('current-page').textContent = `Página: ${currentPage}`;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  loadAppointments();
+  loadAppointments(1, 15);
 });
 
 document.getElementById('appointment-form').addEventListener('submit', function(e) {
@@ -73,7 +80,7 @@ document.getElementById('appointment-form').addEventListener('submit', function(
         document.getElementById('cita_id').value = '';
         document.getElementById('label_cita_id').style.display = 'none';
         // Cargar/Recargar las citas
-        loadAppointments();
+        loadAppointments(currentPage, 15);
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -103,7 +110,7 @@ function deleteAppointment(appointmentId) {
         throw new Error(data.message);
       }
       console.log('Eliminación exitosa!', data);
-      loadAppointments();
+      loadAppointments(currentPage, 15);
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -111,12 +118,9 @@ function deleteAppointment(appointmentId) {
   }
 }
 
-
 function editAppointment(appointmentId) {
   // Mostrar el modal
   openModal();
-  // Obtén los datos de la cita desde el frontend o haz una solicitud al backend.
-  // Por simplicidad, supondremos que obtienes los datos de la tabla.
   const row = document.querySelector(`tr[data-cita-id="${appointmentId}"]`);
   if (row) {
     document.getElementById('modal-title').textContent = 'Editar Cita';
@@ -137,40 +141,54 @@ function editAppointment(appointmentId) {
     // Mostrar input cita
     document.getElementById('label_cita_id').style.display = 'block';
     document.getElementById('cita_id').type = 'text';
-    // Cambiar el texto del botón de envío
+    // Cambiar el texto del boton de envio
     document.getElementById('save-appointment-btn').textContent = 'Guardar Cambios';
   }
 }
 
-function loadAppointments() {
-    fetch('/get-appointments')
-    .then(response => response.json())
-    .then(appointments => {
-    const tableBody = document.getElementById('appointment-table').querySelector('tbody');
-    tableBody.innerHTML = ''; // Limpiar el cuerpo de la tabla
-    // Mostrar nueva informacion
-    appointments.forEach(appointment => {
-      tableBody.innerHTML += `
-        <tr data-cita-id="${appointment.cita_id}">
-          <td>${appointment.cita_id}</td>
-          <td>${appointment.sala_id}</td>
-          <td>${appointment.empleado_matricula}</td>
-          <td>${appointment.fecha_hora}</td>
-          <td>${appointment.nivel_urgencia}</td>
-          <td>${appointment.tipo_cita}</td>
-          <td>${appointment.servicio_id}</td>
-          <td>
-            <button onclick="editAppointment(${appointment.cita_id})">Editar</button>
-            <button onclick="deleteAppointment(${appointment.cita_id})">Eliminar</button>
-          </td>
-        </tr>
-      `;
-    });
+function loadAppointments(page, limit) {
+  fetch(`/get-appointments?page=${page}&limit=${limit}`)
+  .then(response => response.json())
+  .then(data => {
+      const appointments = data.data;
+      const totalPages = data.totalPages;
+      const totalAppointments = data.totalRecords;
+
+      const tableBody = document.getElementById('appointment-table').querySelector('tbody');
+      tableBody.innerHTML = '';
+
+      // Mostrar nueva informacion
+      appointments.forEach(appointment => {
+          tableBody.innerHTML += `
+            <tr data-cita-id="${appointment.cita_id}">
+              <td>${appointment.cita_id}</td>
+              <td>${appointment.sala_id}</td>
+              <td>${appointment.empleado_matricula}</td>
+              <td>${appointment.fecha_hora}</td>
+              <td>${appointment.nivel_urgencia}</td>
+              <td>${appointment.tipo_cita}</td>
+              <td>${appointment.servicio_id}</td>
+              <td>
+                <button onclick="editAppointment(${appointment.cita_id})">Editar</button>
+                <button onclick="deleteAppointment(${appointment.cita_id})">Eliminar</button>
+              </td>
+            </tr>
+          `;
+      });
+
+      // Mostrar numero total de paginas
+      document.getElementById('total-appointments').textContent = `Total de citas: ${totalAppointments}`
+      document.getElementById('total-pages').textContent = `Total de paginas: ${totalPages}`
+
+      // Actualizar estado de los botones de paginacion
+      document.getElementById('prev-page-btn').disabled = currentPage <= 1;
+      document.getElementById('next-page-btn').disabled = currentPage >= totalPages;
   })
   .catch(error => {
-    console.error('Error al cargar las citas:', error);
+      console.error('Error al cargar las citas:', error);
   });
 }
+
 
 function updateTable() {
   fetch('/get-appointments')

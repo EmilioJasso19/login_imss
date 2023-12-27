@@ -100,20 +100,40 @@ app.post('/login', (req, res) => {
 
 // endpoint para obtener citas de la BD
 app.get('/get-appointments', checkAuthentication, (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 15;
+    const offset = (page - 1) * limit;
+
     pool.getConnection((err, conn) => {
         if (err) throw err; // lanzar error
-    
-        conn.query('SELECT * FROM cita', (error, results) => {
-          conn.release(); // Siempre devuelve la conexión al pool después de la consulta -- duda
-    
-          if (error) {
-            res.status(500).send({ message: 'Error al obtener citas', error: error });
-          } else {
-            res.send(results);
-          }
+
+        // Primero, obtener el total de registros
+        conn.query('SELECT COUNT(*) AS count FROM cita', (error, countResult) => {
+            if (error) {
+                conn.release();
+                return res.status(500).send({ message: 'Error al contar citas', error: error });
+            }
+            const totalRecords = countResult[0].count;
+            const totalPages = Math.ceil(totalRecords / limit);
+
+            // Segundo, obtener las citas paginadas
+            conn.query('SELECT * FROM cita LIMIT ? OFFSET ?', [limit, offset], (error, results) => {
+                conn.release(); // Siempre devuelve la conexión al pool después de la consulta
+
+                if (error) {
+                    res.status(500).send({ message: 'Error al obtener citas', error: error });
+                } else {
+                    res.send({
+                        data: results,
+                        totalPages: totalPages,
+                        totalRecords: totalRecords
+                    });
+                }
+            });
         });
-      });
+    });
 });
+
 
 
 // endpoint para agregar citas -- duda
