@@ -151,7 +151,7 @@ function loadAppointments(page, limit) {
   .then(response => response.json())
   .then(data => {
     console.log('esto es data', data[0])
-      const appointments = data.data;
+      const appointments = data;
       console.log('lo que deberia ser appointments', data.data)
       const totalPages = data.totalPages;
       const totalAppointments = data.totalRecords;
