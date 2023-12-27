@@ -150,7 +150,7 @@ function loadAppointments(page, limit) {
   fetch(`/get-appointments?page=${page}&limit=${limit}`)
   .then(response => response.json())
   .then(data => {
-    console.log('esto es data', data[0])
+    console.log('esto es data', data)
       const appointments = data;
       console.log('lo que deberia ser appointments', data.data)
       const totalPages = data.totalPages;
