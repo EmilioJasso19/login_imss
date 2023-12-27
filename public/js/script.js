@@ -1,5 +1,3 @@
-import { response } from "express";
-
 var modal = document.getElementById("modal");
 var btn = document.getElementById("add-appointment-btn");
 var closeBtn = document.getElementsByClassName("close-btn")[0];
