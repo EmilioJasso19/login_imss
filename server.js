@@ -99,7 +99,7 @@ app.post('/login', (req, res) => {
 });
 
 // endpoint para obtener citas de la BD
-app.get('/get-appointments', checkAuthentication, (req, res) => {
+app.get('/get-appointments/:page/:limit', checkAuthentication, (req, res) => {
   console.log(req.query)
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 15;
@@ -120,7 +120,7 @@ app.get('/get-appointments', checkAuthentication, (req, res) => {
 
             // Segundo, obtener las citas paginadas
             conn.query('SELECT * FROM cita LIMIT ? OFFSET ?', [limit, offset], (error, results) => {
-                conn.release(); // Siempre devuelve la conexión al pool después de la consulta
+                conn.release(); // Siempre devuelve la conexion al pool después de la consulta
 
                 console.log('results', results, 'totalPages', totalPages, 'totalRecords', totalRecords)
                 if (error) {
