@@ -148,9 +148,8 @@ function editAppointment(appointmentId) {
 
 function loadAppointments(page, limit) {
   fetch(`/get-appointments?page=${page}&limit=${limit}`)
-  .then(response => response.json())
+  .then(response => console.log(response.json()), response.json())
   .then(data => {
-    console.log(response.json());
       const appointments = data;
       console.log('lo que deberia ser appointments', data.data)
       const totalPages = data.totalPages;
