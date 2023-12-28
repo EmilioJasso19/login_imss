@@ -100,9 +100,11 @@ app.post('/login', (req, res) => {
 
 // endpoint para obtener citas de la BD
 app.get('/get-appointments', checkAuthentication, (req, res) => {
+  console.log(req.query)
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 15;
     const offset = (page - 1) * limit;
+    console.log(offset)
 
     pool.getConnection((err, conn) => {
         if (err) throw err; // lanzar error
@@ -120,6 +122,7 @@ app.get('/get-appointments', checkAuthentication, (req, res) => {
             conn.query('SELECT * FROM cita LIMIT ? OFFSET ?', [limit, offset], (error, results) => {
                 conn.release(); // Siempre devuelve la conexión al pool después de la consulta
 
+                console.log('results', results, 'totalPages', totalPages, 'totalRecords', totalRecords)
                 if (error) {
                     res.status(500).send({ message: 'Error al obtener citas', error: error });
                 } else {
