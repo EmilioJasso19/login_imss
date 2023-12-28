@@ -151,10 +151,10 @@ function loadAppointments(page, limit) {
   .then(response => response.json())
   .then(data => {
     console.log(data);
-      const appointments = data.data;
-      console.log('lo que deberia ser appointments', data.data)
-      const totalPages = data.totalPages;
-      const totalAppointments = data.totalRecords;
+      const appointments = data.data[0];
+      console.log('lo que deberia ser appointments', data.data[0])
+      const totalPages = data.data[1];
+      const totalAppointments = data.data[2];
 
       const tableBody = document.getElementById('appointment-table').querySelector('tbody');
       tableBody.innerHTML = '';
