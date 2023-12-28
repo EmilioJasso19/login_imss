@@ -124,9 +124,7 @@ app.get('/get-appointments', checkAuthentication, (req, res) => {
                     res.status(500).send({ message: 'Error al obtener citas', error: error });
                 } else {
                     res.send({
-                        data: results,
-                        totalPages: totalPages,
-                        totalRecords: totalRecords
+                        data: [results, totalPages, totalRecords]
                     });
                 }
             });
