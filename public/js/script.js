@@ -24,12 +24,12 @@ function outsideClick(e){
   }
 }
 
+let currentPage = 1;
+const limit = 15;
+
 document.addEventListener('DOMContentLoaded', function() {
   loadAppointments(1, 15);
 });
-
-let currentPage = 1;
-const limit = 15;
 
 function changePage(delta) {
   if (currentPage >= 1) delta === 1 ? currentPage++ : currentPage--;
