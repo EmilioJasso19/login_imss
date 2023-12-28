@@ -25,9 +25,9 @@ app.use(bodyParser.json());
 // pool para la conexion a la BD
 const pool = mysql.createPool({
   connectionLimit: 100,
-  host: '85.31.225.145',
-  user: 'mamayanomepegues', 
-  password: 'papayatrabaja', 
+  host: 'localhost',
+  user: 'root', 
+  password: 'fecha_nac', 
   database: 'IMSS'
 });
 
