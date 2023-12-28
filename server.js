@@ -99,7 +99,7 @@ app.post('/login', (req, res) => {
 });
 
 // endpoint para obtener citas de la BD
-app.get('/get-appointments/:page/:limit', checkAuthentication, (req, res) => {
+app.get('/get-appointments', checkAuthentication, (req, res) => {
   console.log(req.query)
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 15;
