@@ -24,12 +24,12 @@ function outsideClick(e){
   }
 }
 
-let currentPage = 1;
-const limit = 15;
-
 document.addEventListener('DOMContentLoaded', function() {
   loadAppointments(1, 15);
 });
+
+let currentPage = 1;
+const limit = 15;
 
 function changePage(delta) {
   if (currentPage >= 1) delta === 1 ? currentPage++ : currentPage--;
@@ -151,11 +151,11 @@ function loadAppointments(page, limit) {
   .then(response => response.json())
   .then(data => {
     console.log('esto es data', data);
-      const appointments = data;
-      console.log('lo que deberia ser appointments', data)
-      const totalPages = data[0][1];
+      const appointments = data.data[0];
+      console.log('lo que deberia ser appointments', data.data[0])
+      const totalPages = data.data[1];
       console.log('totalpages:', totalPages);
-      const totalAppointments = data[0][2];
+      const totalAppointments = data.data[2];
       console.log('totalappon:', totalAppointments);
 
       const tableBody = document.getElementById('appointment-table').querySelector('tbody');

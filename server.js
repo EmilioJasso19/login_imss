@@ -175,9 +175,9 @@ app.put('/update-appointment/:id', (req, res) => {
           ], (error, results) => {
               connection.release();
               if(error) {
-                res.send({ status: 0, message: 'Error al modificar: ', error: error }); // -- duda
+                res.send({ status: 0, message: 'Error al modificar: ', error: error });
               } else {
-                  res.send({ status: 1, message: 'Cita modificada con exito!' }); // -- duda
+                  res.send({ status: 1, message: 'Cita modificada con exito!' });
               }
           });
     });
